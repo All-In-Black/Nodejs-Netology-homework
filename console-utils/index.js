@@ -35,14 +35,14 @@ if (options.add) {
     date.setFullYear(date.getFullYear() - options.years);
     }
     } else {
-    if (options.date) {
-    date.setDate(options.date);
-    }
-    if (options.month) {
-    date.setMonth(options.month);
-    }
-    if (options.year) {
-    date.setFullYear(options.year);
+        if (options.date) {
+        date.setDate(options.date);
+        }
+        if (options.month) {
+        date.setMonth(options.month);
+        }
+        if (options.year) {
+        date.setFullYear(options.year);
     }
 }
 
