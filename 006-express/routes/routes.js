@@ -1,7 +1,7 @@
 const express = require("express");
 const { v4: uuid } = require("uuid");
 const router = express.Router();
-const upload = require("./upload");
+const uploadMulter = require("../middleware/file");
 
 class Book {
   constructor(
@@ -34,24 +34,29 @@ router.post("/api/user/login", (req, res) => {
 });
 
 // **Создать книгу**
-router.post("/api/books", (req, res) => {
-  const { book } = books;
-  const { id, title, description, authors, favorite, fileCover, fileName } =
-    req.body;
+router.post("/api/books", uploadMulter.single("book-pdf"), (req, res) => {
+  if (req.file) {
+    const { book } = books;
+    const { id, title, description, authors, favorite, fileCover } = req.body;
+    const fileName = req.file.filename;
+    const fileBook = req.file.path;
 
-  const newBook = new Book(
-    id,
-    title,
-    description,
-    authors,
-    favorite,
-    fileCover,
-    fileName
-  );
-  book.push(newBook);
+    const newBook = new Book(
+      id,
+      title,
+      description,
+      authors,
+      favorite,
+      fileCover,
+      fileName,
+      fileBook
+    );
+    book.push(newBook);
 
-  res.status(201);
-  res.json(newBook);
+    res.status(201);
+    res.json(newBook);
+  }
+  res.json();
 });
 
 // GET
@@ -72,7 +77,6 @@ router.get("/api/books/:id", (req, res) => {
     res.send("404 | Страница не найдена");
   }
 });
-
 
 router.put("/api/books/:id", (req, res) => {
   const { book } = books;
