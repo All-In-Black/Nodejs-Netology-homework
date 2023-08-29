@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const books = require("../classes/main");
 
 router.get("/api/books/:id/download", (req, res) => {
   const { book } = books;
