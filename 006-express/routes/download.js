@@ -12,7 +12,8 @@ router.get("/api/books/:id/download", (req, res) => {
     return res.json("404 | book is not found");
   }
 
-  res.download(book.fileBook);
+  const fileName = book[idx].fileName;
+  res.download(book[idx].fileBook, fileName);
 });
 
 module.exports = router;
