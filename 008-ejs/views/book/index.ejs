@@ -14,7 +14,10 @@
                         <th scope="col">#</th>
                         <th scope="col">Заголовок</th>
                         <th scope="col">Автор</th>
+                        <th scope="col">Файл</th>
+                        <th scope="col"></th>
                     </tr>
+
                 </thead>
                 <tbody>
 
@@ -28,6 +31,9 @@
                             </td>
                             <td>
                                 <%= el.authors %>
+                            </td>
+                            <td>
+                                <%= el.fileName %>
                             </td>
                             <td class="text-right">
                                 <a class="btn btn-sm btn-success" href="/book/<%= el.id %>">
