@@ -71,7 +71,7 @@ router.put("/api/books/:id", (req, res) => {
       fileCover,
       fileName,
     };
-    res.json(todo[idx]);
+    res.json(book[idx]);
   } else {
     res.status(404);
     res.json("404 | страница не найдена");
