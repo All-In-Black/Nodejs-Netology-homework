@@ -1,0 +1,199 @@
+Задание 1 - Docker CLI:
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm
+$ docker pull busybox:latest
+latest: Pulling from library/busybox
+3f4d90098f5b: Pull complete
+Digest: sha256:3fbc632167424a6d997e74f52b878d7cc478225cffac6bc977eedfe51c7f4e79
+Status: Downloaded newer image for busybox:latest
+docker.io/library/busybox:latest
+
+What's Next?
+  View a summary of image vulnerabilities and recommendations → docker scout quickview busybox:latest
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm
+$ docker run --name pinger busybox ping -c 7 netology.ru
+PING netology.ru (188.114.99.224): 56 data bytes
+64 bytes from 188.114.99.224: seq=0 ttl=63 time=22.685 ms
+64 bytes from 188.114.99.224: seq=1 ttl=63 time=26.591 ms
+64 bytes from 188.114.99.224: seq=2 ttl=63 time=48.751 ms
+64 bytes from 188.114.99.224: seq=3 ttl=63 time=45.031 ms
+64 bytes from 188.114.99.224: seq=4 ttl=63 time=40.186 ms
+64 bytes from 188.114.99.224: seq=5 ttl=63 time=43.384 ms
+64 bytes from 188.114.99.224: seq=6 ttl=63 time=40.623 ms
+
+--- netology.ru ping statistics ---
+7 packets transmitted, 7 packets received, 0% packet loss
+round-trip min/avg/max = 22.685/38.178/48.751 ms
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm
+$ docker ps -a
+CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS                      PORTS     NAMES
+71db60a8e0bd   busybox   "ping -c 7 netology.…"   30 seconds ago   Exited (0) 24 seconds ago             pinger
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm
+$ docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm
+$ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED        SIZE
+alpine       latest    b541f2080109   20 hours ago   7.34MB
+busybox      latest    a416a98b71e2   4 months ago   4.26MB
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm
+$ docker logs pinger
+PING netology.ru (188.114.99.224): 56 data bytes
+64 bytes from 188.114.99.224: seq=0 ttl=63 time=22.685 ms
+64 bytes from 188.114.99.224: seq=1 ttl=63 time=26.591 ms
+64 bytes from 188.114.99.224: seq=2 ttl=63 time=48.751 ms
+64 bytes from 188.114.99.224: seq=3 ttl=63 time=45.031 ms
+64 bytes from 188.114.99.224: seq=4 ttl=63 time=40.186 ms
+64 bytes from 188.114.99.224: seq=5 ttl=63 time=43.384 ms
+64 bytes from 188.114.99.224: seq=6 ttl=63 time=40.623 ms
+
+--- netology.ru ping statistics ---
+7 packets transmitted, 7 packets received, 0% packet loss
+round-trip min/avg/max = 22.685/38.178/48.751 ms
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm
+$ docker run -it pinger
+Unable to find image 'pinger:latest' locally
+docker: Error response from daemon: pull access denied for pinger, repository does not exist or may require 'docker login': denied: requested access to the resource is denied.
+See 'docker run --help'.
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm
+$ docker run --name pinger busybox ping -c 7 netology.ru
+docker: Error response from daemon: Conflict. The container name "/pinger" is already in use by container "71db60a8e0bdb458b19c690eb2bb702e73e2add8d842bd4ca75a3eab0816d43c". You have to remove (or rename) that container to be able to reuse that name.
+See 'docker run --help'.
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm
+$ docker ps -a
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS                     PORTS     NAMES
+71db60a8e0bd   busybox   "ping -c 7 netology.…"   4 minutes ago   Exited (0) 4 minutes ago             pinger
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm
+$ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED        SIZE
+alpine       latest    b541f2080109   21 hours ago   7.34MB
+busybox      latest    a416a98b71e2   4 months ago   4.26MB
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm
+$ docker logs pinger
+PING netology.ru (188.114.99.224): 56 data bytes
+64 bytes from 188.114.99.224: seq=0 ttl=63 time=22.685 ms
+64 bytes from 188.114.99.224: seq=1 ttl=63 time=26.591 ms
+64 bytes from 188.114.99.224: seq=2 ttl=63 time=48.751 ms
+64 bytes from 188.114.99.224: seq=3 ttl=63 time=45.031 ms
+64 bytes from 188.114.99.224: seq=4 ttl=63 time=40.186 ms
+64 bytes from 188.114.99.224: seq=5 ttl=63 time=43.384 ms
+64 bytes from 188.114.99.224: seq=6 ttl=63 time=40.623 ms
+
+--- netology.ru ping statistics ---
+7 packets transmitted, 7 packets received, 0% packet loss
+round-trip min/avg/max = 22.685/38.178/48.751 ms
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm/Node/009-docker (master)
+$ docker logs pinger | grep "PING" | wc -l
+1
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm/Node/009-docker (master)
+$ docker rm pinger
+pinger
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm/Node/009-docker (master)
+$ docker rmi busybox
+Untagged: busybox:latest
+Untagged: busybox@sha256:3fbc632167424a6d997e74f52b878d7cc478225cffac6bc977eedfe51c7f4e79
+Deleted: sha256:a416a98b71e224a31ee99cff8e16063554498227d2b696152a9c3e0aa65e5824
+Deleted: sha256:3d24ee258efc3bfe4066a1a9fb83febf6dc0b1548dfe896161533668281c9f4f
+
+Задание 2 - Environment Variables:
+
+$ docker pull node:15.14
+15.14: Pulling from library/node
+bfde2ec33fbc: Pull complete
+787f5e2f1047: Pull complete
+7b6173a10eb8: Pull complete
+dc05be471d51: Pull complete
+55fab5cadd3c: Pull complete
+bd821d20ef8c: Pull complete
+6041b69671c6: Pull complete
+989c5d2d2313: Pull complete
+4b57d41e8391: Pull complete
+Digest: sha256:608bba799613b1ebf754034ae008849ba51e88b23271412427b76d60ae0d0627
+Status: Downloaded newer image for node:15.14
+docker.io/library/node:15.14
+
+What's Next?
+  View a summary of image vulnerabilities and recommendations → docker scout quickview node:15.14
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm/Node/009-docker (master)
+$ docker run -it --name mynode -e NAME=Андрей -e SURNAME=Соловьев node:15.14
+Welcome to Node.js v15.14.0.
+Type ".help" for more information.
+>
+
+console.log("Привет," + process.env.NAME + "" + process.env.SURNAME + "!");
+Привет,АндрейСоловьев!
+undefined
+> console.log("Привет," + process.env.NAME + " " + process.env.SURNAME + "!");
+Привет,Андрей Соловьев!
+undefined
+>
+(To exit, press Ctrl+C again or Ctrl+D or type .exit)
+>
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm/Node/009-docker (master)
+$ docker stop mynode
+mynode
+
+$ docker rmi node:15.14
+Error response from daemon: conflict: unable to remove repository reference "node:15.14" (must force) - container 244b944b589e is using its referenced image 3d3f41722daf
+
+$ docker rm mynode
+mynode
+
+
+Задание 3 - Volumes:
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm/Node/009-docker (master)
+$ docker pull node:15.14
+15.14: Pulling from library/node
+Digest: sha256:608bba799613b1ebf754034ae008849ba51e88b23271412427b76d60ae0d0627
+Status: Image is up to date for node:15.14
+docker.io/library/node:15.14
+
+What's Next?
+  View a summary of image vulnerabilities and recommendations → docker scout quickview node:15.14
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm/Node/009-docker (master)
+$ docker run -d --name first_node -v $(pwd)/data:/var/first/data node:15.14
+f2fdb4283568a91534890be7d0b384b93bfa0e9f67673e05e583e1dda3a9d132
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm/Node/009-docker (master)
+$ docker run -d --name second_node -v $(pwd)/data:/var/second/data node:15.14
+96bd18a6426b530bfbb3a0c53aa5227ab5ddfff58fafc4e8e581280ff472ea11
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm/Node/009-docker (master)
+$ docker exec -it first_node /bin/bash
+Error response from daemon: Container f2fdb4283568a91534890be7d0b384b93bfa0e9f67673e05e583e1dda3a9d132 is not running
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm/Node/009-docker (master)
+$ docker ps -a
+CONTAINER ID   IMAGE        COMMAND                  CREATED          STATUS                     PORTS     NAMES
+96bd18a6426b   node:15.14   "docker-entrypoint.s…"   18 minutes ago   Exited (0) 7 minutes ago             second_node
+f2fdb4283568   node:15.14   "docker-entrypoint.s…"   21 minutes ago   Exited (0) 7 minutes ago             first_node
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm/Node/009-docker (master)
+$ docker start first_node
+first_node
+
+$ docker exec -it first_node /bin/bash
+Error response from daemon: Container f2fdb4283568a91534890be7d0b384b93bfa0e9f67673e05e583e1dda3a9d132 is not running
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm/Node/009-docker (master)
+$ docker logs first_node
+
+мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm/Node/009-docker (master)
+$
