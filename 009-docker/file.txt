@@ -156,44 +156,136 @@ mynode
 
 
 Задание 3 - Volumes:
+PS D:\Node-hm> docker ps -a
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+PS D:\Node-hm> docker run --name data -it -v %cd%\data:/data alpine /bin/sh
+docker: Error response from daemon: %!c(string=is not a valid Windows path)d%!\(MISSING)data.
+See 'docker run --help'.
+PS D:\Node-hm> docker run --name data -it -v D:\Node-hm\data:/data alpine /bin/sh
+/ # ls
+bin    data   dev    etc    home   lib    media  mnt    opt    proc   root   run    sbin   srv    sys    tmp    usr    var
+/ # cd data
+/data # ls
+/data # ls
+test.txt
+/data # cat test.txt
+/data # cat test.txt
+Hello!
+/data # echo "Hello from container!" >>test.txt
+/data # ls
+test.txt   test1.txt
+/data #
 
-мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm/Node/009-docker (master)
+D:\Node-hm>docker exec -it data ls /data
+test.txt
+
+D:\Node-hm>docker exec -it data touch /data/test1.txt
+
+D:\Node-hm>
+
 $ docker pull node:15.14
 15.14: Pulling from library/node
+bfde2ec33fbc: Pull complete
+787f5e2f1047: Pull complete
+7b6173a10eb8: Pull complete
+dc05be471d51: Pull complete
+55fab5cadd3c: Pull complete
+bd821d20ef8c: Pull complete
+6041b69671c6: Pull complete
+989c5d2d2313: Pull complete
+4b57d41e8391: Pull complete
 Digest: sha256:608bba799613b1ebf754034ae008849ba51e88b23271412427b76d60ae0d0627
-Status: Image is up to date for node:15.14
+Status: Downloaded newer image for node:15.14
 docker.io/library/node:15.14
 
 What's Next?
   View a summary of image vulnerabilities and recommendations → docker scout quickview node:15.14
 
-мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm/Node/009-docker (master)
-$ docker run -d --name first_node -v $(pwd)/data:/var/first/data node:15.14
-f2fdb4283568a91534890be7d0b384b93bfa0e9f67673e05e583e1dda3a9d132
+$ docker run -d -v $(pwd)/data:/var/first/data --name first_node node:15.14
+1085b9982195d72e06880eae9510caa71cb4cb0189f8980cee1a3e3969372954
 
-мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm/Node/009-docker (master)
-$ docker run -d --name second_node -v $(pwd)/data:/var/second/data node:15.14
-96bd18a6426b530bfbb3a0c53aa5227ab5ddfff58fafc4e8e581280ff472ea11
+docker run -d -v $(pwd)/data:/var/first/data --name second_node node:15.14
+eee55e32320de68bb381291b7b6e2405d91247137091940e383af7a40f1203fc
 
-мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm/Node/009-docker (master)
-$ docker exec -it first_node /bin/bash
-Error response from daemon: Container f2fdb4283568a91534890be7d0b384b93bfa0e9f67673e05e583e1dda3a9d132 is not running
-
-мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm/Node/009-docker (master)
-$ docker ps -a
-CONTAINER ID   IMAGE        COMMAND                  CREATED          STATUS                     PORTS     NAMES
-96bd18a6426b   node:15.14   "docker-entrypoint.s…"   18 minutes ago   Exited (0) 7 minutes ago             second_node
-f2fdb4283568   node:15.14   "docker-entrypoint.s…"   21 minutes ago   Exited (0) 7 minutes ago             first_node
-
-мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm/Node/009-docker (master)
 $ docker start first_node
 first_node
 
-$ docker exec -it first_node /bin/bash
-Error response from daemon: Container f2fdb4283568a91534890be7d0b384b93bfa0e9f67673e05e583e1dda3a9d132 is not running
+$ docker start second_node
+second_node
 
-мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm/Node/009-docker (master)
-$ docker logs first_node
+docker exec -it first_node sh -c "Some text.." > /var/first/data/file.txt
+bash: /var/first/data/file.txt: No such file or directory
 
-мвидео@LAPTOP-S5EOGL98 MINGW64 /d/Node-hm/Node/009-docker (master)
-$
+PS D:\Node-hm> cd Node/009-docker
+PS D:\Node-hm\Node\009-docker> ls
+
+
+    Каталог: D:\Node-hm\Node\009-docker
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        07.12.2023     13:11                data;C
+d-----        07.12.2023     13:19                var
+-a----        07.12.2023     13:15           8114 file.txt
+
+
+PS D:\Node-hm\Node\009-docker> docker exec -it first_node bash echo
+"some text" > /var/first/data/file.txt
+out-file : Не удалось найти часть пути "D:\var\first\data\file.txt"
+.
+строка:1 знак:1
++ docker exec -it first_node bash echo "some text" > /var/first/dat
+a/fi ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~
+    + CategoryInfo          : OpenError: (:) [Out-File], Directory
+   NotFoundException
+    + FullyQualifiedErrorId : FileOpenFailure,Microsoft.PowerShell
+   .Commands.OutFileCommand
+
+PS D:\Node-hm\Node\009-docker>
+
+PS D:\Node-hm\Node\009-docker> docker exec -it second_node bash
+root@cd31409ca425:/# ls
+\Program Files\Git\var\first\data  etc    media  root  sys
+bin                                home   mnt    run   tmp
+boot                               lib    opt    sbin  usr
+dev                                lib64  proc   srv   var
+root@cd31409ca425:/# cat /var/second/data/file.txt
+cat: /var/second/data/file.txt: No such file or directory
+root@cd31409ca425:/# cat /var/second/data/test1.txt
+cat: /var/second/data/test1.txt: No such file or directory
+root@cd31409ca425:/# exit
+exit
+PS D:\Node-hm\Node\009-docker>
+
+PS D:\Node-hm\Node\009-docker> docker stop first_node
+first_node
+PS D:\Node-hm\Node\009-docker> docker stop second_node
+second_node
+PS D:\Node-hm\Node\009-docker> docker rm first_node
+first_node
+PS D:\Node-hm\Node\009-docker> docker rm second_node
+second_node
+PS D:\Node-hm\Node\009-docker> docker rmi node:15.14
+Untagged: node:15.14
+Untagged: node@sha256:608bba799613b1ebf754034ae008849ba51e88b23271412427b76d60ae0d0627
+Deleted: sha256:3d3f41722daf1a77c34d6eade6676bbffa2d6a2a21095de2ab0c427a5c942fc9
+Deleted: sha256:601382991a159cfc5013ad973158f30b7b7a913e8d7e547b3456deab3ad98022
+Deleted: sha256:d5db49eecae8c02c9ea3a79f89c43ded9162bac118a0302a7b514d0df82aa112
+Deleted: sha256:a2c1973858d0aad3de0927294602b17c8ef9050c30e0f461e0868997a08552a4
+Deleted: sha256:a0153172017a08a521a8be971ca4dcb5fbc4b7227642c12bbb2da6265bd66b50
+Deleted: sha256:f1123940e954d335d91b52a40fab4f8144f38ff113ade7d65663071d0f06da6f
+Deleted: sha256:f1f4fbb0e7e6e0ce2d9eae1e577f9f6df0a719dd874bff00b2d08895c75c297d
+Deleted: sha256:1eb455ab6d45fdbbd90fccff791ffa228080c052acf464f8da1b1d78650bd706
+Deleted: sha256:1dbe832a694971a925d7d216f49b700c95f402bd72288f9d37eceb1d59dcf72d
+Deleted: sha256:2f4ee6a2e1b5dfb9236cd262e788f9d39109242ca27a4aacb583c8af66ec3ff7
+PS D:\Node-hm\Node\009-docker>
+
+
+
+
+
+
+
