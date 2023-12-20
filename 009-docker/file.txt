@@ -156,136 +156,107 @@ mynode
 
 
 Задание 3 - Volumes:
+PS D:\Node-hm> docker pull node:15.14-alpine
+15.14-alpine: Pulling from library/node
+ddad3d7c1e96: Pull complete
+0e18143e8d4d: Pull complete
+377ad682a98b: Pull complete
+99b3e0ba5237: Pull complete
+Digest: sha256:6edd37368174c15d4cc59395ca2643be8e2a1c9846714bc92c5f5c5a92fb8929
+Status: Downloaded newer image for node:15.14-alpine
+docker.io/library/node:15.14-alpine
+
+D:\Node-hm>docker run -d --name first_node -v D:\Node-hm/data:/var/first/data node:15.14-alpine
+e628e895c5475cb9c122ecf6622e596658a056ba731a0808a7630272a3197ae7
+
+D:\Node-hm>docker run -d --name second_node -v D:\Node-hm/data:/var/second/data
+node:15.14-alpine
+9c60299d96b0dfdf4f57f7eb391ac6a45928501e646583f98d65cabf0cb93616
+
+PS D:\Node-hm> docker exec -it first_node sh -c 'touch /var/first/data/test.txt'
+Error response from daemon: Container e628e895c5475cb9c122ecf6622e596658a056ba731a0808a7630272a3197ae7 is not running
+
+
+D:\Node-hm>docker start first_node
+first_node
+
 PS D:\Node-hm> docker ps -a
+CONTAINER ID   IMAGE               COMMAND                  CREATED         STATUS                          PORTS     NAMES                                       kview node:15.14-alpine
+9c60299d96b0   node:15.14-alpine   "docker-entrypoint.s…"   5 minutes ago   Exitee:15.14-alpined (0) 5 minutes ago                  second_node
+e628e895c547   node:15.14-alpine   "docker-entrypoint.s…"   6 minutes ago   Exited (0) About a minute ago             first_node
+PS D:\Node-hm>
+
+
+D:\Node-hm>docker rm first_node
+first_node
+
+D:\Node-hm>docker rm second_node
+second_node
+
+
+D:\Node-hm>docker run -it --name first_node -v D:\Node-hm/data:/var/first/data node:15.14-alpine
+Welcome to Node.js v15.14.0.
+Type ".help" for more information.
+>
+(To exit, press Ctrl+C again or Ctrl+D or type .exit)
+>
+
+D:\Node-hm>docker start first_node
+first_node
+
+D:\Node-hm>docker run -it --name second_node -v D:\Node-hm/data:/var/second/data node:15.14-alpine
+Welcome to Node.js v15.14.0.
+Type ".help" for more information.
+>
+
+D:\Node-hm>docker start second_node
+second_node
+
+PS D:\Node-hm> docker exec -it first_node sh -c touch /var/first/data/test.txt   e:15.14-alpine
+BusyBox v1.31.1 () multi-call binary.
+
+Usage: touch [-c] [-d DATE] [-t DATE] [-r FILE] FILE...
+
+Update the last-modified date on the given FILE[s]
+
+        -c      Don't create files
+        -h      Don't follow links
+        -d DT   Date/time to use
+        -t DT   Date/time to use
+        -r FILE Use FILE's date/time
+
+PS D:\Node-hm> docker exec -it first_node touch /var/first/data/file.txt
+
+D:\Node-hm>docker exec -i -t second_node ls
+bin    etc    lib    mnt    proc   run    srv    tmp    var
+dev    home   media  opt    root   sbin   sys    usr
+
+D:\Node-hm>docker exec -i -t second_node ls /var/second/data
+file.txt   test1.txt
+
+
+D:\Node-hm>docker stop first_node second_node
+first_node
+second_node
+
+
+D:\Node-hm>docker rm first_node second_node
+first_node
+second_node
+
+D:\Node-hm>docker ps -a
 CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
-PS D:\Node-hm> docker run --name data -it -v %cd%\data:/data alpine /bin/sh
-docker: Error response from daemon: %!c(string=is not a valid Windows path)d%!\(MISSING)data.
-See 'docker run --help'.
-PS D:\Node-hm> docker run --name data -it -v D:\Node-hm\data:/data alpine /bin/sh
-/ # ls
-bin    data   dev    etc    home   lib    media  mnt    opt    proc   root   run    sbin   srv    sys    tmp    usr    var
-/ # cd data
-/data # ls
-/data # ls
-test.txt
-/data # cat test.txt
-/data # cat test.txt
-Hello!
-/data # echo "Hello from container!" >>test.txt
-/data # ls
-test.txt   test1.txt
-/data #
 
-D:\Node-hm>docker exec -it data ls /data
-test.txt
+D:\Node-hm>docker images
+REPOSITORY   TAG            IMAGE ID       CREATED       SIZE
+alpine       latest         b541f2080109   2 weeks ago   7.34MB
+node         15.14-alpine   75631da67663   2 years ago   112MB
 
-D:\Node-hm>docker exec -it data touch /data/test1.txt
+D:\Node-hm>docker rmi node:15.14-alpine
+Untagged: node:15.14-alpine
+Untagged: node@sha256:6edd37368174c15d4cc59395ca2643be8e2a1c9846714bc92c5f5c5a92fb8929
+Deleted: sha256:75631da67663db1d5f3518892db3259b52f105d4b692f88cf2457a0b27abf0e1Deleted: sha256:158a0c9086736df897b2be3838b3acd39c6258d5f564f601dcc23e5ed9fd1a88Deleted: sha256:7ff49c61cfd4cd0e2d3fc07f81904c5e19b7ea96b715db515dbe396a86dd01f2Deleted: sha256:06a84147b938c0ea306dc5d0a632b708a4e73c6de82a6ca2de1c0a95338f98b9Deleted: sha256:9a5d14f9f5503e55088666beef7e85a8d9625d4fa7418e2fe269e9c54bcb853c
 
-D:\Node-hm>
-
-$ docker pull node:15.14
-15.14: Pulling from library/node
-bfde2ec33fbc: Pull complete
-787f5e2f1047: Pull complete
-7b6173a10eb8: Pull complete
-dc05be471d51: Pull complete
-55fab5cadd3c: Pull complete
-bd821d20ef8c: Pull complete
-6041b69671c6: Pull complete
-989c5d2d2313: Pull complete
-4b57d41e8391: Pull complete
-Digest: sha256:608bba799613b1ebf754034ae008849ba51e88b23271412427b76d60ae0d0627
-Status: Downloaded newer image for node:15.14
-docker.io/library/node:15.14
-
-What's Next?
-  View a summary of image vulnerabilities and recommendations → docker scout quickview node:15.14
-
-$ docker run -d -v $(pwd)/data:/var/first/data --name first_node node:15.14
-1085b9982195d72e06880eae9510caa71cb4cb0189f8980cee1a3e3969372954
-
-docker run -d -v $(pwd)/data:/var/first/data --name second_node node:15.14
-eee55e32320de68bb381291b7b6e2405d91247137091940e383af7a40f1203fc
-
-$ docker start first_node
-first_node
-
-$ docker start second_node
-second_node
-
-docker exec -it first_node sh -c "Some text.." > /var/first/data/file.txt
-bash: /var/first/data/file.txt: No such file or directory
-
-PS D:\Node-hm> cd Node/009-docker
-PS D:\Node-hm\Node\009-docker> ls
-
-
-    Каталог: D:\Node-hm\Node\009-docker
-
-
-Mode                 LastWriteTime         Length Name
-----                 -------------         ------ ----
-d-----        07.12.2023     13:11                data;C
-d-----        07.12.2023     13:19                var
--a----        07.12.2023     13:15           8114 file.txt
-
-
-PS D:\Node-hm\Node\009-docker> docker exec -it first_node bash echo
-"some text" > /var/first/data/file.txt
-out-file : Не удалось найти часть пути "D:\var\first\data\file.txt"
-.
-строка:1 знак:1
-+ docker exec -it first_node bash echo "some text" > /var/first/dat
-a/fi ...
-+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~
-    + CategoryInfo          : OpenError: (:) [Out-File], Directory
-   NotFoundException
-    + FullyQualifiedErrorId : FileOpenFailure,Microsoft.PowerShell
-   .Commands.OutFileCommand
-
-PS D:\Node-hm\Node\009-docker>
-
-PS D:\Node-hm\Node\009-docker> docker exec -it second_node bash
-root@cd31409ca425:/# ls
-\Program Files\Git\var\first\data  etc    media  root  sys
-bin                                home   mnt    run   tmp
-boot                               lib    opt    sbin  usr
-dev                                lib64  proc   srv   var
-root@cd31409ca425:/# cat /var/second/data/file.txt
-cat: /var/second/data/file.txt: No such file or directory
-root@cd31409ca425:/# cat /var/second/data/test1.txt
-cat: /var/second/data/test1.txt: No such file or directory
-root@cd31409ca425:/# exit
-exit
-PS D:\Node-hm\Node\009-docker>
-
-PS D:\Node-hm\Node\009-docker> docker stop first_node
-first_node
-PS D:\Node-hm\Node\009-docker> docker stop second_node
-second_node
-PS D:\Node-hm\Node\009-docker> docker rm first_node
-first_node
-PS D:\Node-hm\Node\009-docker> docker rm second_node
-second_node
-PS D:\Node-hm\Node\009-docker> docker rmi node:15.14
-Untagged: node:15.14
-Untagged: node@sha256:608bba799613b1ebf754034ae008849ba51e88b23271412427b76d60ae0d0627
-Deleted: sha256:3d3f41722daf1a77c34d6eade6676bbffa2d6a2a21095de2ab0c427a5c942fc9
-Deleted: sha256:601382991a159cfc5013ad973158f30b7b7a913e8d7e547b3456deab3ad98022
-Deleted: sha256:d5db49eecae8c02c9ea3a79f89c43ded9162bac118a0302a7b514d0df82aa112
-Deleted: sha256:a2c1973858d0aad3de0927294602b17c8ef9050c30e0f461e0868997a08552a4
-Deleted: sha256:a0153172017a08a521a8be971ca4dcb5fbc4b7227642c12bbb2da6265bd66b50
-Deleted: sha256:f1123940e954d335d91b52a40fab4f8144f38ff113ade7d65663071d0f06da6f
-Deleted: sha256:f1f4fbb0e7e6e0ce2d9eae1e577f9f6df0a719dd874bff00b2d08895c75c297d
-Deleted: sha256:1eb455ab6d45fdbbd90fccff791ffa228080c052acf464f8da1b1d78650bd706
-Deleted: sha256:1dbe832a694971a925d7d216f49b700c95f402bd72288f9d37eceb1d59dcf72d
-Deleted: sha256:2f4ee6a2e1b5dfb9236cd262e788f9d39109242ca27a4aacb583c8af66ec3ff7
-PS D:\Node-hm\Node\009-docker>
-
-
-
-
-
-
-
+D:\Node-hm>docker images
+REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
+alpine       latest    b541f2080109   2 weeks ago   7.34MB
